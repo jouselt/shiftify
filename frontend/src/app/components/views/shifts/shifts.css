@@ -1,0 +1,14 @@
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .color-swatch {
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+  }

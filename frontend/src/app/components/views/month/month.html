@@ -1,0 +1,26 @@
+<div class="month-view-container">
+    <div class="month-header">
+        <button (click)="changeMonth(-1)">&lt;</button>
+        <h2>{{ (displayMonth$ | async) | date:'LLLL yyyy' | titlecase }}</h2>
+        <button (click)="changeMonth(1)">&gt;</button>
+    </div>
+
+    <div class="calendar-grid" *ngIf="{ weeks: calendarWeeks$ | async, shiftsMap: shiftsMap$ | async } as data">
+        <div *ngFor="let day of daysOfWeek" class="day-header">{{ day }}</div>
+
+        <div *ngFor="let week of data.weeks" class="week-row">
+            <div *ngFor="let day of week" class="day-cell" [class.not-current-month]="!day.isCurrentMonth">
+                <div class="day-number">{{ day.date | date:'d' }}</div>
+
+                <div class="shifts-container">
+                    <div *ngFor="let item of day.workingEmployees" class="employee-shift-chip"
+                        [style.backgroundColor]="data.shiftsMap?.get(item.shiftCode)?.color"
+                        (click)="assignDayOff(item.employee.id, day.date)">
+                        <span class="chip-name">{{ item.employee.employeeName }}</span>
+                        <span class="chip-shift">{{ item.shiftCode }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

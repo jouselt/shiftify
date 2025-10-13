@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>{{ isEditMode ? 'Editar Turno' : 'Añadir Turno' }}</h1>
+<div mat-dialog-content [formGroup]="form">
+    <mat-form-field appearance="outline">
+        <mat-label>Código de Turno</mat-label>
+        <input matInput formControlName="shiftCode" required [readonly]="isEditMode">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="category">
+            <mat-option value="Morning">Morning</mat-option>
+            <mat-option value="Afternoon">Afternoon</mat-option>
+            <mat-option value="Night">Night</mat-option>
+            <mat-option value="Custom">Custom</mat-option>
+            <mat-option value="Off">Off</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Hora de Inicio</mat-label>
+        <input matInput type="time" formControlName="startTime" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Hora de Fin</mat-label>
+        <input matInput type="time" formControlName="endTime" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Horas Trabajadas (auto)</mat-label>
+        <input matInput type="number" formControlName="hoursWorked" readonly>
+    </mat-form-field>
+
+    <div class="color-picker-container">
+        <label for="color-picker">Color del Turno:</label>
+        <input id="color-picker" type="color" formControlName="color">
+    </div>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</div>

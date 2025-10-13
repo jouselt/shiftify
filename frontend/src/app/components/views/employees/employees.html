@@ -1,0 +1,38 @@
+<div class="view-container" *ngIf="i18n.translations$ | async as t">
+  <div class="view-header">
+    <h2>{{ t['employeeList'] }}</h2>
+    <button mat-flat-button color="primary" (click)="openEmployeeDialog()">
+      <mat-icon>add</mat-icon> {{ t['addNewEmployee'] }}
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Cargo</th>
+          <th>Tipo</th>
+          <th>Horas</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees$ | async">
+          <td>{{ employee.employeeName }}</td>
+          <td>{{ employee.title }}</td>
+          <td>{{ employee.type }}</td>
+          <td>{{ employee.contractHours }}</td>
+          <td>
+            <button mat-icon-button color="primary" (click)="openEmployeeDialog(employee)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteEmployee(employee)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

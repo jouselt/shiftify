@@ -1,0 +1,19 @@
+div[mat-dialog-content] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+}
+
+mat-form-field,
+.color-picker-container {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.color-picker-container {
+    grid-column: 1 / -1;
+    /* Make it span both columns */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}

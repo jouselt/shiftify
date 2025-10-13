@@ -1,0 +1,12 @@
+<div class="view-selector-toolbar">
+    <mat-form-field appearance="outline">
+      <mat-label>View</mat-label>
+      <mat-select [value]="currentView" (valueChange)="onViewChange($event)">
+        <mat-option value="day">Day</mat-option>
+        <mat-option value="week">Week</mat-option>
+        <mat-option value="month">Month</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  
+  <router-outlet></router-outlet>

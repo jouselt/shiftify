@@ -1,0 +1,112 @@
+.month-view-container {
+    padding: 1rem;
+}
+
+.month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.month-header h2 {
+    margin: 0;
+    min-width: 200px;
+    text-align: center;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid #e0e0e0;
+}
+
+.day-header {
+    font-weight: 500;
+    text-align: center;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-column: 1 / -1;
+    /* Make week span all 7 columns */
+}
+
+.day-cell {
+    min-height: 120px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.5rem;
+}
+
+.day-cell:last-child {
+    border-right: none;
+}
+
+.day-number {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.not-current-month {
+    background-color: #fafafa;
+    color: #b0b0b0;
+}
+
+.employees-off {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.employee-chip-off {
+    background-color: #fce4ec;
+    color: #880e4f;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.shifts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.employee-shift-chip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #333;
+    /* A neutral text color that works on most light backgrounds */
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: filter 0.2s ease;
+}
+
+.employee-shift-chip:hover {
+    filter: brightness(0.95);
+}
+
+.chip-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+
+.chip-shift {
+    font-weight: bold;
+    margin-left: 8px;
+}

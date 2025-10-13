@@ -1,0 +1,7 @@
+<nav class="main-nav" *ngIf="i18n.translations$ | async as t">
+  <a class="nav-link" routerLink="/schedule" routerLinkActive="active">{{ t['tabSchedule'] }}</a>
+  <a class="nav-link" routerLink="/day" routerLinkActive="active">{{ t['tabDayView'] }}</a>
+  <a class="nav-link" routerLink="/month" routerLinkActive="active">{{ t['tabMonthView'] }}</a>
+  <a class="nav-link" routerLink="/employees" routerLinkActive="active">{{ t['tabManageEmployees'] }}</a>
+  <a class="nav-link" routerLink="/shifts" routerLinkActive="active">{{ t['tabManageShifts'] }}</a>
+</nav>

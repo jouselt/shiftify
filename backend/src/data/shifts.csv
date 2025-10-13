@@ -1,0 +1,8 @@
+shiftCode,category,startTime,endTime,hoursWorked,color
+Libre,Off,0:00,0:00,0,#F0F0F0
+AM10,Morning,7:00,17:30,10,#C6EFCE
+PM10,Afternoon,12:00,22:30,10,#FFF8C5
+Noche10,Night,22:00,8:30,10,#D8DAF9
+AM8,Morning,7:00,15:30,8,#C6EFCE
+PM8,Afternoon,14:00,22:30,8,#FFF8C5
+Noche8,Night,23:00,7:30,8,#D8DAF9

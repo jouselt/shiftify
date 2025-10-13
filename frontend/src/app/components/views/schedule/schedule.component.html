@@ -1,0 +1,77 @@
+<div class="schedule-container" *ngIf="i18n.translations$ | async as t">
+  <div class="schedule-actions">
+    <button (click)="generateNewSchedule()">{{ t['autoGenerate'] }}</button>
+    
+    <div class="week-nav">
+      <button (click)="changeWeek(-1)">&lt; Semana Anterior</button>
+      <button (click)="goToToday()">Hoy</button>
+      <button (click)="changeWeek(1)">Semana Siguiente &gt;</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="{
+    schedule: schedule$ | async,
+    week: weekDates$ | async,
+    shiftsMap: shiftsMap$ | async
+  } as data">
+
+    <div *ngIf="data.schedule; else placeholder">
+      <ng-container *ngIf="managers$ | async as managers">
+        <div *ngIf="managers.length > 0">
+          <h2>Gerentes (Managers)</h2>
+          <div class="table-wrapper">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>Empleado</th>
+                  <th *ngFor="let day of data.week">{{ day | date:'EEE d' }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let manager of managers">
+                  <td class="employee-name">{{ manager.employeeName }}</td>
+                  <td *ngFor="let day of data.week" 
+                      [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:manager.id:day)?.color">
+                    {{ data.schedule | getShift:manager.id:day }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="crew$ | async as crewMembers">
+        <div *ngIf="crewMembers.length > 0">
+          <h2>Equipo (Crew)</h2>
+          <div class="table-wrapper">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>Empleado</th>
+                  <th *ngFor="let day of data.week">{{ day | date:'EEE d' }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let crew of crewMembers">
+                  <td class="employee-name">{{ crew.employeeName }}</td>
+                  <td *ngFor="let day of data.week"
+                      [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:crew.id:day)?.color">
+                    {{ data.schedule | getShift:crew.id:day }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+      </div>
+
+    <ng-template #placeholder>
+      <div class="placeholder">
+        <h3>Presiona "{{ t['autoGenerate'] }}" para generar un nuevo horario.</h3>
+      </div>
+    </ng-template>
+
+  </ng-container>
+</div>

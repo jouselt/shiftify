@@ -1,0 +1,22 @@
+<header class="app-header" *ngIf="i18n.translations$ | async as t">
+    <h1 class="app-title">{{ t['appTitle'] }}</h1>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="store-select">Store:</label>
+            <select id="store-select" (change)="onStoreChange($event)">
+                <option *ngFor="let store of stores$ | async" [value]="store.id">
+                    {{ store.name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="lang-select">Language:</label>
+            <select id="lang-select" (change)="onLanguageChange($event)">
+                <option value="es-cl">Español</option>
+                <option value="en-us">English</option>
+            </select>
+        </div>
+    </div>
+</header>

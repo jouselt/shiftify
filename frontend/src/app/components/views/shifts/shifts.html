@@ -1,0 +1,42 @@
+<div class="view-container" *ngIf="i18n.translations$ | async as t">
+  <div class="view-header">
+    <h2>{{ t['shiftDefinitions'] }}</h2>
+    <button mat-flat-button color="primary" (click)="openShiftDialog()">
+      <mat-icon>add</mat-icon> {{ t['createNewShift'] }}
+    </button>
+  </div>
+  
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Categoría</th>
+          <th>Horario</th>
+          <th>Horas</th>
+          <th>Color</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let shift of shifts$ | async">
+          <td>{{ shift.shiftCode }}</td>
+          <td>{{ shift.category }}</td>
+          <td>{{ shift.startTime }} - {{ shift.endTime }}</td>
+          <td>{{ shift.hoursWorked }}</td>
+          <td>
+            <span class="color-swatch" [style.backgroundColor]="shift.color"></span>
+          </td>
+          <td>
+            <button mat-icon-button color="primary" (click)="openShiftDialog(shift)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteShift(shift)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

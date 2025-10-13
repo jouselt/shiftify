@@ -1,0 +1,19 @@
+<app-header></app-header>
+
+<ng-container *ngIf="i18n.translations$ | async as t">
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" *ngIf="i18n.translations$ | async as t">
+    <a mat-tab-link routerLink="/schedule" routerLinkActive #rlaSchedule="routerLinkActive" [active]="rlaSchedule.isActive">
+      {{ t['tabSchedule'] }}
+    </a>
+    <a mat-tab-link routerLink="/employees" routerLinkActive #rlaEmployees="routerLinkActive" [active]="rlaEmployees.isActive">
+      {{ t['tabManageEmployees'] }}
+    </a>
+    <a mat-tab-link routerLink="/shifts" routerLinkActive #rlaShifts="routerLinkActive" [active]="rlaShifts.isActive">
+      {{ t['tabManageShifts'] }}
+    </a>
+  </nav>
+</ng-container>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+<router-outlet></router-outlet>

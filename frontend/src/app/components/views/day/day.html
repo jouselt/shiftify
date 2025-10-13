@@ -1,0 +1,35 @@
+<div class="day-view-container" *ngIf="i18n.translations$ | async as t">
+    <div class="day-selector">
+        <label for="date-picker">Seleccionar Fecha:</label>
+        <input type="date" id="date-picker" [value]="selectedDate" (change)="onDateChange($event)" />
+    </div>
+
+    <ng-container *ngIf="{
+      timeline: timeline$ | async,
+      shiftsMap: shiftsMap$ | async,
+      employees: employees$ | async
+    } as data">
+        <div class="timeline-grid" *ngIf="data.timeline; else loading">
+            <div class="header-employee">Empleado</div>
+            <div class="header-timeline">
+                <div *ngFor="let slot of data.timeline" class="time-header-slot">{{ slot.time.substring(0, 2) }}</div>
+            </div>
+
+            <ng-container *ngFor="let emp of data.employees">
+                <div class="employee-name-cell">{{ emp.employeeName }}</div>
+                <div class="employee-timeline-row">
+                    <div *ngFor="let slot of data.timeline" class="time-slot-cell">
+                        <div *ngIf="isEmployeeWorking(emp, slot)" class="shift-block"
+                            [style.backgroundColor]="data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.color">
+                            {{ getShiftForEmployee(emp.id, data.timeline) }}
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Loading timeline...</p>
+    </ng-template>
+</div>
