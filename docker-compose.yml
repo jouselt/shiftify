@@ -1,0 +1,28 @@
+
+services:
+  # NestJS Backend Service
+  backend:
+    image: node:24-alpine
+    container_name: shiftify-backend
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - ./libs:/app/libs
+      - /app/node_modules
+    command: sh -c "npm install && npm run start:dev"
+
+  # Angular Frontend Service
+  frontend:
+    image: node:24-alpine
+    container_name: shiftify-frontend
+    working_dir: /app
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - ./libs:/app/libs
+      - /app/node_modules
+    # --- UPDATE THIS LINE ---
+    command: sh -c "npm i -g @angular/cli && npm install && ng serve --host 0.0.0.0"

@@ -1,7 +1,7 @@
 <div class="schedule-container" *ngIf="i18n.translations$ | async as t">
   <div class="schedule-actions">
     <button (click)="generateNewSchedule()">{{ t['autoGenerate'] }}</button>
-    
+
     <div class="week-nav">
       <button (click)="changeWeek(-1)">&lt; Semana Anterior</button>
       <button (click)="goToToday()">Hoy</button>
@@ -24,14 +24,18 @@
               <thead>
                 <tr>
                   <th>Empleado</th>
+                  <th>Total Horas</th>
                   <th *ngFor="let day of data.week">{{ day | date:'EEE d' }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let manager of managers">
                   <td class="employee-name">{{ manager.employeeName }}</td>
-                  <td *ngFor="let day of data.week" 
-                      [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:manager.id:day)?.color">
+                  <td class="total-hours">
+                    {{ data.schedule | calculateWeeklyHours:manager.id:data.week:data.shiftsMap }}
+                  </td>
+                  <td *ngFor="let day of data.week"
+                    [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:manager.id:day)?.color">
                     {{ data.schedule | getShift:manager.id:day }}
                   </td>
                 </tr>
@@ -49,14 +53,18 @@
               <thead>
                 <tr>
                   <th>Empleado</th>
+                  <th>Total Horas</th>
                   <th *ngFor="let day of data.week">{{ day | date:'EEE d' }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let crew of crewMembers">
                   <td class="employee-name">{{ crew.employeeName }}</td>
+                  <td class="total-hours">
+                    {{ data.schedule | calculateWeeklyHours:crew.id:data.week:data.shiftsMap }}
+                  </td>
                   <td *ngFor="let day of data.week"
-                      [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:crew.id:day)?.color">
+                    [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:crew.id:day)?.color">
                     {{ data.schedule | getShift:crew.id:day }}
                   </td>
                 </tr>
@@ -65,7 +73,7 @@
           </div>
         </div>
       </ng-container>
-      </div>
+    </div>
 
     <ng-template #placeholder>
       <div class="placeholder">

@@ -29,6 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { EmployeeDialogComponent } from './components/dialogs/employee-dialog/employee-dialog';
 import { ShiftDialog } from './components/dialogs/shift-dialog/shift-dialog';
+import { CalculateWeeklyHoursPipe } from './pipes/calculate-weekly-hours-pipe';
 registerLocaleData(localeEsCl);
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ registerLocaleData(localeEsCl);
     MonthComponent,
     ScheduleWrapperComponent,
     EmployeeDialogComponent,
-    ShiftDialog
+    ShiftDialog,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +61,7 @@ registerLocaleData(localeEsCl);
     MatDialogModule,
     MatInputModule,
     MatButtonModule,
+    CalculateWeeklyHoursPipe,
     MatIconModule
   ],
   providers: [

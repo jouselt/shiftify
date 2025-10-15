@@ -56,10 +56,13 @@
 }
 
 .shift-block {
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #333;
-  border-radius: 4px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.shift-hours {
+  font-size: 0.75em;
+  opacity: 0.8;
 }

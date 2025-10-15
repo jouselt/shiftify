@@ -31,7 +31,7 @@ export class DayComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     public i18n: I18nService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.employees$ = this.apiService.getEmployees(1);
@@ -39,24 +39,48 @@ export class DayComponent implements OnInit {
       map(shiftsArray => new Map(shiftsArray.map(s => [s.shiftCode, s])))
     );
 
-    this.timeline$ = this.route.paramMap.pipe(
+    this.employees$ = this.route.paramMap.pipe(
       switchMap(params => {
+        const dateParam = params.get('date');
+        if (!dateParam) return of([]);
+
+        const year = parseInt(dateParam.split('-')[0]);
+        const month = parseInt(dateParam.split('-')[1]);
+
+        return combineLatest([
+          this.apiService.getEmployees(1),
+          this.apiService.generateSchedule(1, month, year)
+        ]).pipe(
+          map(([allEmployees, schedule]) => {
+            if (!schedule) return [];
+            // Filter the employee list to only include those working today
+            return allEmployees.filter(emp => {
+              const shiftCode = schedule[emp.id]?.[dateParam];
+              return shiftCode && shiftCode !== 'Libre';
+            });
+          })
+        );
+      })
+    );
+
+    this.timeline$ = combineLatest([
+      this.route.paramMap,
+      this.employees$,
+      this.shiftsMap$
+    ]).pipe(
+      switchMap(([params, employees, shiftsMap]) => {
         const dateParam = params.get('date');
         if (!dateParam) return of([]);
 
         this.selectedDate = dateParam;
         const year = parseInt(dateParam.split('-')[0]);
         const month = parseInt(dateParam.split('-')[1]);
-        
-        return combineLatest([
-          this.apiService.generateSchedule(1, month, year),
-          this.employees$,
-          this.shiftsMap$
-        ]).pipe(
-          map(([schedule, employees, shiftsMap]) => {
+
+        return this.apiService.generateSchedule(1, month, year).pipe(
+          map(schedule => {
             if (!schedule) return [];
             const timeSlots = this.generateTimeSlots();
-            
+
             return timeSlots.map(time => {
               const workingItems = employees
                 .map(emp => ({
@@ -65,12 +89,10 @@ export class DayComponent implements OnInit {
                 }))
                 .filter(item => {
                   if (item.shiftCode === 'Libre' || item.shiftCode === 'N/A') return false;
-                  
                   const shift = shiftsMap.get(item.shiftCode);
-                if (!shift) return false;
-                  
-                return time >= shift.startTime && time < shift.endTime;
-              });
+                  if (!shift) return false;
+                  return time >= shift.startTime && time < shift.endTime;
+                });
 
               return { time, employees: workingItems };
             });
@@ -92,10 +114,11 @@ export class DayComponent implements OnInit {
     }
     return slots;
   }
+  
   isEmployeeWorking(employee: Employee, slot: TimelineSlot): boolean {
     return slot.employees.some(item => item.employee.id === employee.id);
   }
-  
+
   getShiftForEmployee(employeeId: number, timeline: TimelineSlot[]): string {
     for (const slot of timeline) {
       const item = slot.employees.find(e => e.employee.id === employeeId);
