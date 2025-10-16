@@ -1,10 +1,11 @@
 
-import { Controller, Get, Query, ParseIntPipe, DefaultValuePipe, Body, Delete, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Query, ParseIntPipe, DefaultValuePipe, Body, Delete, NotFoundException, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { DataService } from './data.service';
 import { Employee, Shift, Store } from '@pro-schedule-manager/interfaces';
 import { CreateEmployeeDto } from 'src/schedule/dto/create-employee.dto';
 import { CreateShiftDto } from 'src/schedule/dto/create-shift.dto';
 import { UpdateShiftDto } from 'src/schedule/dto/update-shift.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('data') // All routes in this controller will be prefixed with /data
 export class DataController {
@@ -83,5 +84,20 @@ export class DataController {
       throw new NotFoundException(`Shift with code ${code} not found.`);
     }
     return result;
+  }
+  @Get('status')
+  getStatus(): { hasData: boolean } {
+    return this.dataService.getStatus();
+  }
+  @Post('upload/employees')
+  @UseInterceptors(FileInterceptor('file')) // 'file' is the field name from the frontend
+  async uploadEmployees(@UploadedFile() file: Express.Multer.File): Promise<{ success: boolean }> {
+    return this.dataService.loadEmployeesFromUpload(file.buffer);
+  }
+
+  @Post('upload/shifts')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadShifts(@UploadedFile() file: Express.Multer.File): Promise<{ success: boolean }> {
+    return this.dataService.loadShiftsFromUpload(file.buffer);
   }
 }

@@ -1,0 +1,24 @@
+<div class="onboarding-container">
+    <h1>Welcome to Shiftify!</h1>
+    <p>To get started, please upload your employee and shift data.</p>
+
+    <div class="upload-section">
+        <div class="file-input">
+            <label for="employee-file">1. Upload Employee Roster (.csv)</label>
+            <input id="employee-file" type="file" accept=".csv" (change)="onFileSelected($event, 'employee')">
+            <span *ngIf="employeeFile" class="file-name">{{ employeeFile.name }}</span>
+        </div>
+
+        <div class="file-input">
+            <label for="shift-file">2. Upload Shift Definitions (.csv)</label>
+            <input id="shift-file" type="file" accept=".csv" (change)="onFileSelected($event, 'shift')">
+            <span *ngIf="shiftFile" class="file-name">{{ shiftFile.name }}</span>
+        </div>
+    </div>
+
+    <button mat-flat-button color="primary" [disabled]="!employeeFile || !shiftFile || isLoading"
+        (click)="uploadFiles()">
+        Get Started
+    </button>
+    <p *ngIf="isLoading">Uploading files, please wait...</p>
+</div>

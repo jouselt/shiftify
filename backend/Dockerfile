@@ -12,7 +12,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 COPY --from=builder /app/dist ./dist
-# Don't forget to copy assets!
+# Copy assets needed for runtime
 COPY --from=builder /app/src/data ./src/data
 COPY --from=builder /app/src/i18n ./src/i18n
 

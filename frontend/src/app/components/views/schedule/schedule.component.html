@@ -1,11 +1,11 @@
 <div class="schedule-container" *ngIf="i18n.translations$ | async as t">
   <div class="schedule-actions">
-    <button (click)="generateNewSchedule()">{{ t['autoGenerate'] }}</button>
+    <button mat-flat-button (click)="generateNewSchedule()">{{ t['autoGenerate'] }}</button>
 
     <div class="week-nav">
-      <button (click)="changeWeek(-1)">&lt; Semana Anterior</button>
-      <button (click)="goToToday()">Hoy</button>
-      <button (click)="changeWeek(1)">Semana Siguiente &gt;</button>
+      <button mat-flat-button (click)="changeWeek(-1)">&lt; Semana Anterior</button>
+      <button mat-flat-button (click)="goToToday()">Hoy</button>
+      <button mat-flat-button (click)="changeWeek(1)">Semana Siguiente &gt;</button>
     </div>
   </div>
 

@@ -1,5 +1,3 @@
-// In backend/src/data/data.service.ts
-
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { promises as fs } from 'fs';
 import * as path from 'path';
@@ -9,9 +7,9 @@ import { CreateShiftDto } from 'src/schedule/dto/create-shift.dto';
 import { CreateEmployeeDto } from 'src/schedule/dto/create-employee.dto';
 import { UpdateShiftDto } from 'src/schedule/dto/update-shift.dto';
 
-
 @Injectable()
 export class DataService implements OnModuleInit {
+
   private readonly logger = new Logger(DataService.name);
 
   // These will hold our "in-memory database"
@@ -176,5 +174,88 @@ export class DataService implements OnModuleInit {
       return { success: true };
     }
     return { success: false };
+  }
+
+  getStatus(): { hasData: boolean } {
+    const hasData = this._employees.length > 0 && this._shifts.length > 0;
+    return { hasData };
+  }
+  async loadEmployeesFromUpload(fileBuffer: Buffer): Promise<{ success: boolean }> {
+    try {
+      // We reuse the same parsing logic from onModuleInit, but with the uploaded buffer
+      let idCounter = 1;
+      this._employees = parse(fileBuffer, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        cast: (value, context) => {
+          if (context.column === 'Contract Hours') {
+            return parseInt(value, 10);
+          }
+          return value;
+        },
+      }).map((record: any) => ({
+        id: idCounter++,
+        employeeName: record['Employee Name'],
+        title: record.Title,
+        type: record.Type,
+        contractHours: record['Contract Hours'],
+        // For now, assign all employees to Store 1 for simplicity
+        homeStoreId: 1,
+      }));
+
+      // We also write the file to disk to persist it for the next server restart
+      const filePath = path.join(__dirname, '..', 'data', 'employee.csv');
+      await fs.writeFile(filePath, fileBuffer);
+
+      this.logger.log(`Successfully loaded ${this._employees.length} employees from upload.`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Failed to load employees from upload.', error);
+      return { success: false };
+    }
+  }
+
+  async loadShiftsFromUpload(fileBuffer: Buffer): Promise<{ success: boolean }> {
+    try {
+      // Reuse the parsing logic from loadShifts, including header renaming
+      this._shifts = parse(fileBuffer, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        cast: (value, context) => {
+          if (context.column === 'Hours Worked') {
+            return parseFloat(value);
+          }
+          return value;
+        },
+        // Rename headers to match our Shift interface
+        on_record: (record) => {
+          record.shiftCode = record['Shift Code'];
+          record.startTime = record['Start Time'];
+          record.endTime = record['End Time'];
+          record.category = record['Category']
+          record.hoursWorked = record['Hours Worked'];
+          record.color = record['Color']
+          delete record['Shift Code'];
+          delete record['Start Time'];
+          delete record['End Time'];
+          delete record['Hours Worked'];
+          delete record['Color'];
+          delete record['Category'];
+          return record;
+        }
+      });
+
+      // Write the file to disk to persist it
+      const filePath = path.join(__dirname, '..', 'data', 'shifts.csv');
+      await fs.writeFile(filePath, fileBuffer);
+
+      this.logger.log(`Successfully loaded ${this._shifts.length} shifts from upload.`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Failed to load shifts from upload.', error);
+      return { success: false };
+    }
   }
 }

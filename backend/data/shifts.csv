@@ -1,4 +1,4 @@
-shiftCode,category,startTime,endTime,hoursWorked,color
+Shift Code,Category,Start Time,End Time,Hours Worked,Color
 Libre,Off,0:00,0:00,0,#F0F0F0
 AM10,Morning,7:00,17:30,10,#C6EFCE
 PM10,Afternoon,12:00,22:30,10,#FFF8C5

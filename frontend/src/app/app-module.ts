@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { LOCALE_ID, NgModule, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,6 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { EmployeeDialogComponent } from './components/dialogs/employee-dialog/employee-dialog';
 import { ShiftDialog } from './components/dialogs/shift-dialog/shift-dialog';
 import { CalculateWeeklyHoursPipe } from './pipes/calculate-weekly-hours-pipe';
+import { Onboarding } from './components/views/onboarding/onboarding';
+import { ServiceWorkerModule } from '@angular/service-worker';
 registerLocaleData(localeEsCl);
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ registerLocaleData(localeEsCl);
     ScheduleWrapperComponent,
     EmployeeDialogComponent,
     ShiftDialog,
+    Onboarding,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +65,13 @@ registerLocaleData(localeEsCl);
     MatInputModule,
     MatButtonModule,
     CalculateWeeklyHoursPipe,
-    MatIconModule
+    MatIconModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

@@ -54,11 +54,11 @@ export class ApiService {
   // Add this method to your ApiService class
 
   /**
-   * Updates a single day in the schedule for a specific employee.
-   * @param employeeId The ID of the employee to update.
-   * @param date The date string in "YYYY-MM-DD" format.
-   * @param shiftCode The new shift code to assign (e.g., "Libre").
-   */
+     * Updates a single day in the schedule for a specific employee.
+     * @param employeeId The ID of the employee to update.
+     * @param date The date string in "YYYY-MM-DD" format.
+     * @param shiftCode The new shift code to assign (e.g., "Libre").
+     */
   updateScheduleDay(employeeId: number, date: string, shiftCode: string): Observable<{ success: boolean }> {
     const body = { employeeId, date, shiftCode };
     return this.http.put<{ success: boolean }>(`${this.apiUrl}/schedule/day`, body);
@@ -76,8 +76,8 @@ export class ApiService {
   deleteEmployee(id: number): Observable<{ success: boolean }> {
     return this.http.delete<{ success: boolean }>(`${this.apiUrl}/data/employees/${id}`);
   }
-  // --- Shift CRUD ---
-  addShift(shiftData: Omit<Shift, 'shiftCode'> & { shiftCode: string }): Observable<Shift> {
+
+  addShift(shiftData: Shift): Observable<Shift> {
     return this.http.post<Shift>(`${this.apiUrl}/data/shifts`, shiftData);
   }
 
@@ -87,5 +87,22 @@ export class ApiService {
 
   deleteShift(code: string): Observable<{ success: boolean }> {
     return this.http.delete<{ success: boolean }>(`${this.apiUrl}/data/shifts/${code}`);
+  }
+  // Add these methods to ApiService
+
+  checkStatus(): Observable<{ hasData: boolean }> {
+    return this.http.get<{ hasData: boolean }>(`${this.apiUrl}/data/status`);
+  }
+
+  uploadEmployeesCsv(file: File): Observable<{ success: boolean }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<{ success: boolean }>(`${this.apiUrl}/data/upload/employees`, formData);
+  }
+
+  uploadShiftsCsv(file: File): Observable<{ success: boolean }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<{ success: boolean }>(`${this.apiUrl}/data/upload/shifts`, formData);
   }
 }

@@ -53,9 +53,9 @@ export class MonthComponent implements OnInit {
   }
 
   // This method is now only for demonstration; real update logic will be in the next step.
-  assignDayOff(employeeId: number, date: Date): void {
+  assignDayOff(employeeId: number, date: Date, shiftCode:string): void {
     console.log(`Assigning day off for employee ${employeeId} on ${date.toISOString().split('T')[0]}`);
-    // In the next step, we'll connect this to the backend API.
+    this.apiService.updateScheduleDay(employeeId, date.toISOString().split('T')[0], shiftCode)   // In the next step, we'll connect this to the backend API.
   }
 
   private generateCalendar(
