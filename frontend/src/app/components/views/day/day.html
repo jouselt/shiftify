@@ -9,7 +9,7 @@
       shiftsMap: shiftsMap$ | async,
       employees: employees$ | async
     } as data">
-        <div class="timeline-grid" *ngIf="data.timeline; else loading">
+        <div class="timeline-grid" *ngIf="data.timeline && data.employees; else loading">
             <div class="header-employee">Empleado</div>
             <div class="header-timeline">
                 <div *ngFor="let slot of data.timeline" class="time-header-slot">{{ slot.time.substring(0, 2) }}</div>
@@ -22,7 +22,8 @@
                         <div *ngIf="isEmployeeWorking(emp, slot)" class="shift-block"
                             [style.backgroundColor]="data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.color">
                             <span class="shift-code">{{ getShiftForEmployee(emp.id, data.timeline) }}</span>
-                            <span class="shift-hours">({{ data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.hoursWorked }}h)</span>
+                            <span class="shift-hours">({{ data.shiftsMap?.get(getShiftForEmployee(emp.id,
+                                data.timeline))?.hoursWorked }}h)</span>
                         </div>
                     </div>
                 </div>

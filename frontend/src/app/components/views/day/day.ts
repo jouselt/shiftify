@@ -34,70 +34,61 @@ export class DayComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.employees$ = this.apiService.getEmployees(1);
     this.shiftsMap$ = this.apiService.getShifts().pipe(
       map(shiftsArray => new Map(shiftsArray.map(s => [s.shiftCode, s])))
     );
 
-    this.employees$ = this.route.paramMap.pipe(
+    // This is the main reactive stream for the component
+    const data$ = this.route.paramMap.pipe(
       switchMap(params => {
         const dateParam = params.get('date');
-        if (!dateParam) return of([]);
-
-        const year = parseInt(dateParam.split('-')[0]);
-        const month = parseInt(dateParam.split('-')[1]);
-
-        return combineLatest([
-          this.apiService.getEmployees(1),
-          this.apiService.generateSchedule(1, month, year)
-        ]).pipe(
-          map(([allEmployees, schedule]) => {
-            if (!schedule) return [];
-            // Filter the employee list to only include those working today
-            return allEmployees.filter(emp => {
-              const shiftCode = schedule[emp.id]?.[dateParam];
-              return shiftCode && shiftCode !== 'Libre';
-            });
-          })
-        );
-      })
-    );
-
-    this.timeline$ = combineLatest([
-      this.route.paramMap,
-      this.employees$,
-      this.shiftsMap$
-    ]).pipe(
-      switchMap(([params, employees, shiftsMap]) => {
-        const dateParam = params.get('date');
-        if (!dateParam) return of([]);
+        if (!dateParam) return of(null);
 
         this.selectedDate = dateParam;
         const year = parseInt(dateParam.split('-')[0]);
         const month = parseInt(dateParam.split('-')[1]);
 
-        return this.apiService.generateSchedule(1, month, year).pipe(
-          map(schedule => {
-            if (!schedule) return [];
-            const timeSlots = this.generateTimeSlots();
+        // Fetch all necessary data in parallel
+        return combineLatest({
+          schedule: this.apiService.generateSchedule(1, month, year),
+          allEmployees: this.apiService.getEmployees(1),
+          shiftsMap: this.shiftsMap$
+        });
+      })
+    );
 
-            return timeSlots.map(time => {
-              const workingItems = employees
-                .map(emp => ({
-                  employee: emp,
-                  shiftCode: schedule[emp.id]?.[this.selectedDate] || 'N/A'
-                }))
-                .filter(item => {
-                  if (item.shiftCode === 'Libre' || item.shiftCode === 'N/A') return false;
-                  const shift = shiftsMap.get(item.shiftCode);
-                  if (!shift) return false;
-                  return time >= shift.startTime && time < shift.endTime;
-                });
+    // Stream for employees who are actually working on the selected day
+    this.employees$ = data$.pipe(
+      map(data => {
+        if (!data || !data.schedule) return [];
+        return data.allEmployees.filter(emp => {
+          const shiftCode = data.schedule![emp.id]?.[this.selectedDate];
+          return shiftCode && shiftCode !== 'Libre';
+        });
+      })
+    );
 
-              return { time, employees: workingItems };
+    // Stream to build the final timeline structure
+    this.timeline$ = data$.pipe(
+      map(data => {
+        if (!data || !data.schedule) return [];
+        const { schedule, allEmployees, shiftsMap } = data;
+        const timeSlots = this.generateTimeSlots();
+
+        return timeSlots.map(time => {
+          const workingItems = allEmployees
+            .map(emp => ({
+              employee: emp,
+              shiftCode: schedule[emp.id]?.[this.selectedDate] || 'N/A'
+            }))
+            .filter(item => {
+              if (item.shiftCode === 'Libre' || item.shiftCode === 'N/A') return false;
+              const shift = shiftsMap.get(item.shiftCode);
+              if (!shift) return false;
+              return time >= shift.startTime && time < shift.endTime;
             });
-          })
-        );
+          return { time, employees: workingItems };
+        });
       })
     );
   }
@@ -114,7 +105,7 @@ export class DayComponent implements OnInit {
     }
     return slots;
   }
-  
+
   isEmployeeWorking(employee: Employee, slot: TimelineSlot): boolean {
     return slot.employees.some(item => item.employee.id === employee.id);
   }
