@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { registerLocaleData } from '@angular/common';
 import localeEsCl from '@angular/common/locales/es-CL';
-import { ReactiveFormsModule } from '@angular/forms'; // <-- Add
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- Add
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,6 +32,8 @@ import { ShiftDialog } from './components/dialogs/shift-dialog/shift-dialog';
 import { CalculateWeeklyHoursPipe } from './pipes/calculate-weekly-hours-pipe';
 import { Onboarding } from './components/views/onboarding/onboarding';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { SelectShiftDialogComponent } from './components/dialogs/select-shift-dialog/select-shift-dialog';
+
 registerLocaleData(localeEsCl);
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ registerLocaleData(localeEsCl);
     EmployeeDialogComponent,
     ShiftDialog,
     Onboarding,
+    SelectShiftDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -65,6 +68,7 @@ registerLocaleData(localeEsCl);
     MatInputModule,
     MatButtonModule,
     CalculateWeeklyHoursPipe,
+    FormsModule,
     MatIconModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),

@@ -47,7 +47,6 @@ h2 {
   margin-top: 2rem;
 }
 
-/* Add to schedule.component.css */
 .schedule-actions {
   display: flex;
   justify-content: space-between;
@@ -60,4 +59,12 @@ h2 {
 .week-nav {
   display: flex;
   gap: 0.5rem;
+}
+
+.shift-cell {
+  cursor: pointer;
+}
+
+.shift-cell:hover {
+  filter: brightness(0.9);
 }

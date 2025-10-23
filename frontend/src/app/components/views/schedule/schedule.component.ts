@@ -1,9 +1,12 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Observable, map, BehaviorSubject, switchMap, tap } from 'rxjs';
 import { Employee, GeneratedSchedule, Shift } from '@pro-schedule-manager/interfaces';
 import { ApiService } from '@pro-schedule-manager/services/api';
 import { I18nService } from '@pro-schedule-manager/services/i18n';
 import {DatePipe} from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectShiftDialogComponent } from '@pro-schedule-manager/components/dialogs/select-shift-dialog/select-shift-dialog';
 
 @Component({
   selector: 'app-schedule',
@@ -27,7 +30,8 @@ export class ScheduleComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, 
-    public i18n: I18nService
+    public i18n: I18nService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -89,5 +93,33 @@ export class ScheduleComponent implements OnInit {
       weekDates.push(weekDay);
       }
     return weekDates;
+  }
+  openShiftSelectionDialog(employeeId: number, date: Date, currentShiftCode: string): void {
+    const dialogRef = this.dialog.open(SelectShiftDialogComponent, {
+      width: '350px',
+      data: { currentShiftCode: currentShiftCode }
+    });
+
+    dialogRef.afterClosed().subscribe(newShiftCode => {
+      if (newShiftCode && newShiftCode !== currentShiftCode) {
+        const dateString = date.toISOString().split('T')[0];
+        this.apiService.updateScheduleDay(employeeId, dateString, newShiftCode).subscribe({
+          next: (res) => {
+            if (res.success) {
+              // Refresh the schedule data by re-running the generate function
+              // (This is slightly inefficient but works with the current setup)
+              this.generateNewSchedule();
+            } else {
+              console.error("Failed to update shift on backend");
+              // TODO: Add user feedback (e.g., snackbar)
+            }
+          },
+          error: (err) => {
+             console.error("Error updating shift", err);
+             // TODO: Add user feedback
+          }
+        });
+      }
+    });
   }
 }

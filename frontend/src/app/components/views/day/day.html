@@ -20,10 +20,12 @@
                 <div class="employee-timeline-row">
                     <div *ngFor="let slot of data.timeline" class="time-slot-cell">
                         <div *ngIf="isEmployeeWorking(emp, slot)" class="shift-block"
-                            [style.backgroundColor]="data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.color">
+                            [style.backgroundColor]="data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.color"
+                            (click)="openShiftSelectionDialog(emp.id, getShiftForEmployee(emp.id, data.timeline))">
                             <span class="shift-code">{{ getShiftForEmployee(emp.id, data.timeline) }}</span>
-                            <span class="shift-hours">({{ data.shiftsMap?.get(getShiftForEmployee(emp.id,
-                                data.timeline))?.hoursWorked }}h)</span>
+                            <span class="shift-hours">
+                                ({{ data.shiftsMap?.get(getShiftForEmployee(emp.id, data.timeline))?.hoursWorked }}h)
+                            </span>
                         </div>
                     </div>
                 </div>

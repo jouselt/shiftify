@@ -5,6 +5,8 @@ import { Observable, map, combineLatest, of, switchMap } from 'rxjs';
 import { ApiService } from '@pro-schedule-manager/services/api';
 import { Employee, Shift, GeneratedSchedule } from '@pro-schedule-manager/interfaces';
 import { I18nService } from '@pro-schedule-manager/services/i18n';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectShiftDialogComponent } from '@pro-schedule-manager/components/dialogs/select-shift-dialog/select-shift-dialog';
 
 interface TimelineSlot {
   time: string;
@@ -31,6 +33,7 @@ export class DayComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     public i18n: I18nService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -118,5 +121,32 @@ export class DayComponent implements OnInit {
       }
     }
     return '';
+  }
+  openShiftSelectionDialog(employeeId: number, currentShiftCode: string): void {
+    if (!this.selectedDate) return; // Ensure date is selected
+
+    const dialogRef = this.dialog.open(SelectShiftDialogComponent, {
+      width: '350px',
+      data: { currentShiftCode: currentShiftCode }
+    });
+
+    dialogRef.afterClosed().subscribe(newShiftCode => {
+      if (newShiftCode && newShiftCode !== currentShiftCode) {
+        this.apiService.updateScheduleDay(employeeId, this.selectedDate, newShiftCode).subscribe({
+          next: (res) => {
+            if (res.success) {
+              // Refresh the view by re-navigating (forces ngOnInit to re-run)
+              // This is a simple way to refresh the data for now
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/day', this.selectedDate]);
+              });
+            } else {
+              console.error("Failed to update shift on backend");
+            }
+          },
+          error: (err) => console.error("Error updating shift", err)
+        });
+      }
+    });
   }
 }

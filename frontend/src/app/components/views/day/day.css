@@ -60,6 +60,12 @@
   justify-content: center;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.shift-block:hover {
+  filter: brightness(0.9);
 }
 
 .shift-hours {

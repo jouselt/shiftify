@@ -34,11 +34,18 @@
                   <td class="total-hours">
                     {{ data.schedule | calculateWeeklyHours:manager.id:data.week:data.shiftsMap }}
                   </td>
-                  <td *ngFor="let day of data.week"
-                    [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:manager.id:day)?.color">
-                    {{ data.schedule | getShift:manager.id:day }}
-                  </td>
-                </tr>
+                  
+                  <td *ngFor="let day of data.week" 
+                      class="shift-cell-container"> 
+                      <ng-container *ngIf="(data.schedule | getShift:manager.id:day) as shiftCode">
+                          <div class="shift-cell"
+                               [style.backgroundColor]="data.shiftsMap?.get(shiftCode)?.color"
+                               (click)="openShiftSelectionDialog(manager.id, day, shiftCode)">
+                               {{ shiftCode }}
+                          </div>
+                      </ng-container>
+                      </td>
+                  </tr>
               </tbody>
             </table>
           </div>
@@ -63,11 +70,18 @@
                   <td class="total-hours">
                     {{ data.schedule | calculateWeeklyHours:crew.id:data.week:data.shiftsMap }}
                   </td>
+                   
                   <td *ngFor="let day of data.week"
-                    [style.backgroundColor]="data.shiftsMap?.get(data.schedule | getShift:crew.id:day)?.color">
-                    {{ data.schedule | getShift:crew.id:day }}
+                      class="shift-cell-container">
+                      <ng-container *ngIf="(data.schedule | getShift:crew.id:day) as shiftCode">
+                          <div class="shift-cell"
+                               [style.backgroundColor]="data.shiftsMap?.get(shiftCode)?.color"
+                               (click)="openShiftSelectionDialog(crew.id, day, shiftCode)">
+                               {{ shiftCode }}
+                          </div>
+                      </ng-container>
                   </td>
-                </tr>
+                  </tr>
               </tbody>
             </table>
           </div>
