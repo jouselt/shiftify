@@ -4,8 +4,8 @@ services:
   # NestJS Backend Service
   backend:
     build:
-      context: . # <-- Change to root context
-      dockerfile: backend/Dockerfile # <-- Specify the Dockerfile path
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: shiftify-backend-prod
     ports:
       - "3000:3000"
@@ -14,10 +14,10 @@ services:
   # Angular Frontend Service
   frontend:
     build:
-      context: . # <-- Change to root context
-      dockerfile: frontend/Dockerfile # <-- Specify the Dockerfile path
+      context: . 
+      dockerfile: frontend/Dockerfile 
     container_name: shiftify-frontend-prod
     ports:
-      - "80:80"
+      - "8080:80"
     restart: unless-stopped
     

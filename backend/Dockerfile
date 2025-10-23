@@ -14,10 +14,8 @@ COPY backend/package*.json ./
 RUN npm install --omit=dev
 COPY --from=builder /app/dist ./dist
 
-# --- ADD THESE TWO LINES TO COPY RUNTIME ASSETS ---
-COPY --from=builder /app/src/data ./app/data
+COPY --from=builder /app/src/data ./data
 COPY --from=builder /app/src/i18n ./src/i18n
-# ----------------------------------------------------
 
 EXPOSE 3000
 CMD ["node", "dist/main"]

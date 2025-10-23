@@ -24,5 +24,4 @@ services:
       - ./frontend:/app
       - ./libs:/app/libs
       - /app/node_modules
-    # --- UPDATE THIS LINE ---
     command: sh -c "npm i -g @angular/cli && npm install && ng serve --host 0.0.0.0"
