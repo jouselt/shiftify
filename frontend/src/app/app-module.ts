@@ -33,6 +33,7 @@ import { CalculateWeeklyHoursPipe } from './pipes/calculate-weekly-hours-pipe';
 import { Onboarding } from './components/views/onboarding/onboarding';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { SelectShiftDialogComponent } from './components/dialogs/select-shift-dialog/select-shift-dialog';
+import { AddShiftDialog } from './components/dialogs/add-shift-dialog/add-shift-dialog';
 
 registerLocaleData(localeEsCl);
 @NgModule({
@@ -50,7 +51,8 @@ registerLocaleData(localeEsCl);
     EmployeeDialogComponent,
     ShiftDialog,
     Onboarding,
-    SelectShiftDialogComponent
+    SelectShiftDialogComponent,
+    AddShiftDialog
   ],
   imports: [
     BrowserModule,

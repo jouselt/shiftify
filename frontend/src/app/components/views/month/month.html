@@ -9,14 +9,14 @@
         <div *ngFor="let day of daysOfWeek" class="day-header">{{ day }}</div>
 
         <div *ngFor="let week of data.weeks" class="week-row">
-            <div *ngFor="let day of week" class="day-cell" [class.not-current-month]="!day.isCurrentMonth">
+            <div *ngFor="let day of week" class="day-cell" [class.not-current-month]="!day.isCurrentMonth"
+                (click)="openAddShiftDialog(day.date)">
                 <div class="day-number">{{ day.date | date:'d' }}</div>
-
                 <div class="shifts-container">
                     <div *ngFor="let item of day.workingEmployees" class="employee-shift-chip"
                         [style.backgroundColor]="data.shiftsMap?.get(item.shiftCode)?.color"
-                        (click)="assignDayOff(item.employee.id, day.date, item.shiftCode)">
-                        <span class="chip-name">{{ item.employee.employeeName }}</span>
+                        (click)="assignDayOff(item.employee.id, day.date); $event.stopPropagation()"> <span
+                            class="chip-name">{{ item.employee.employeeName }}</span>
                         <span class="chip-shift">{{ item.shiftCode }}</span>
                     </div>
                 </div>

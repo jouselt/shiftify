@@ -41,6 +41,10 @@
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
     padding: 0.5rem;
+    cursor: pointer;
+}
+.day-cell:hover {
+    border: 1px solid #c92ec9;
 }
 
 .day-cell:last-child {

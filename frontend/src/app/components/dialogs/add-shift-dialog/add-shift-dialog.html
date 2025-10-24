@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Add Shift to Day</h1>
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Employee</mat-label>
+    <mat-select formControlName="employeeId" required>
+      <mat-option *ngFor="let emp of employees" [value]="emp.id">
+        {{ emp.employeeName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Shift</mat-label>
+    <mat-select formControlName="shiftCode" required>
+      <mat-option *ngFor="let shift of shifts" [value]="shift.shiftCode">
+        {{ shift.shiftCode }} ({{ shift.startTime }} - {{ shift.endTime }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Add Shift</button>
+</div>
